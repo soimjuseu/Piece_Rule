@@ -74,21 +74,31 @@ int can_Move_King(int currentRow, int currentCol, int targetRow, int targetCol) 
 
 }
 
-int can_Move_Pawn(int currentRow, int currentCol, int targetRow, int targetCol, int white_piece) {
-	if (white_piece == 1 && targetRow == currentRow - 1 && targetCol == currentCol) { return 1; }
+int can_Move_Pawn(int currentRow, int currentCol, int targetRow, int targetCol, int white_piece,int My_piece,int other_piece) { //white부터 3개의 함수는 테스트용 임의의 함수
+	if		(white_piece == 1 && targetRow == currentRow - 1 && targetCol == currentCol) { return 1; }
+			//백 기물 턴이면 1칸 전진(col이 같아야 return 되기에 전진만 가능) 로직
 	else if (white_piece == 0 && targetRow == currentRow + 1 && targetCol == currentCol) { return 1; }
+			//흑 기물 턴이면 1칸 전진(col이 같아야 return 되기에 전진만 가능) 로직
+	else if (white_piece == 1 && currentRow == 6 && targetRow == currentRow - 2 && targetCol == currentCol) {return 1;}
+			//백 기물 턴이면서, 시작위치에 있다면 2칸 이동(첫 턴 2칸 이동 로직)
+	else if (white_piece == 0 && currentRow == 1 && targetRow == currentRow + 2 && targetCol == currentCol) { return 1; }
+			//흑 기물 턴이면서, 시작위치에 있다면 2칸 이동(첫 턴 2칸 이동 로직)
+	else if (white_piece == 1 && targetRow == currentRow - 1 &&
+			(abs(targetRow - currentRow) == 1 && 
+			abs(targetCol - currentCol) == 1 && 
+			other_piece == 1))
+			{ return 1; } //백 기준 대각잡 판정 로직
 
-	else if (white_piece == 1 && currentRow == 6 && targetRow == currentRow - 2) {return 1;}
+	else if (white_piece == 0 && targetRow == currentRow + 1 &&
+			(abs(targetRow - currentRow) == 1 &&
+			abs(targetCol - currentCol) == 1 &&
+			other_piece == 1))
+			{return 1;} //흑 기준 대각잡 판정 로직
 		
-	else if (white_piece == 0 && currentRow == 1 && targetRow == currentRow + 2) { return 1; }
-		
-	else { return 0;  }
-			
 	
 
-
-
-
+	else	{ return 0;  }
+		
 }
 
 
@@ -118,6 +128,50 @@ int main() {
 	printf("King   (3,2) -> (4,3): %d\n", can_Move_King(3, 2, 4, 3));
 	printf("King   (3,2) -> (5,2): %d\n", can_Move_King(3, 2, 5, 2));
 	printf("King   (3,2) -> (3,2): %d\n", can_Move_King(3, 2, 3, 2));
+
+	// 백색 1칸 전진
+	printf("Pawn W  (6,3) -> (5,3): %d\n",
+		can_Move_Pawn(6, 3, 5, 3, 1, 1, 0));
+
+	// 흑색 1칸 전진
+	printf("Pawn B  (1,3) -> (2,3): %d\n",
+		can_Move_Pawn(1, 3, 2, 3, 0, 1, 0));
+
+	// 백색 첫 2칸
+	printf("Pawn W  (6,3) -> (4,3): %d\n",
+		can_Move_Pawn(6, 3, 4, 3, 1, 1, 0));
+
+	// 흑색 첫 2칸
+	printf("Pawn B  (1,3) -> (3,3): %d\n",
+		can_Move_Pawn(1, 3, 3, 3, 0, 1, 0));
+
+	// 백색 대각선 잡기
+	printf("Pawn W  (5,3) -> (4,2): %d\n",
+		can_Move_Pawn(5, 3, 4, 2, 1, 1, 1));
+
+	// 백색 반대쪽 대각선 잡기
+	printf("Pawn W  (5,3) -> (4,4): %d\n",
+		can_Move_Pawn(5, 3, 4, 4, 1, 1, 1));
+
+	// 흑색 대각선 잡기
+	printf("Pawn B  (2,3) -> (3,2): %d\n",
+		can_Move_Pawn(2, 3, 3, 2, 0, 1, 1));
+
+	// 흑색 반대쪽 대각선 잡기
+	printf("Pawn B  (2,3) -> (3,4): %d\n",
+		can_Move_Pawn(2, 3, 3, 4, 0, 1, 1));
+
+	// 옆으로 이동 → 실패
+	printf("Pawn W  (5,3) -> (5,4): %d\n",
+		can_Move_Pawn(5, 3, 5, 4, 1, 1, 0));
+
+	// 대각선인데 상대 말 없음 → 실패
+	printf("Pawn W  (5,3) -> (4,4): %d\n",
+		can_Move_Pawn(5, 3, 4, 4, 1, 1, 0));
+
+	// 백색 폰이 시작 위치가 아닌 곳에서 2칸 → 실패
+	printf("Pawn W  (5,3) -> (3,3): %d\n",
+		can_Move_Pawn(5, 3, 3, 3, 1, 1, 0));
 
 
 return 0;
