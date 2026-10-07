@@ -44,8 +44,8 @@ int can_Move_Bishop(int currentRow, int currentCol, int targetRow, int targetCol
 
 int can_Move_Queen(int currentRow, int currentCol, int targetRow, int targetCol) {
 
-	  if(currentRow == targetRow && currentCol == targetCol) { return 0; }
- else if((currentCol == targetCol 
+	if (currentRow == targetRow && currentCol == targetCol) { return 0; }
+	else if ((currentCol == targetCol
 		||
 		currentRow == targetRow //1.상하좌우 
 		||
@@ -93,7 +93,9 @@ int can_Move_Pawn(int currentRow, int currentCol, int targetRow, int targetCol, 
 			(abs(targetRow - currentRow) == 1 &&
 			abs(targetCol - currentCol) == 1 &&
 			other_piece == 1))
-			{return 1;} //흑 기준 대각잡 판정 로직
+	{
+		return 1;
+	} //흑 기준 대각잡 판정 로직
 		
 	
 
