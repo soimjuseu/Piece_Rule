@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include "Rule_header.h"
 
+
+
+
 int can_Move_Rook(int currentRow, int currentCol, int targetRow, int targetCol) //
 {
 
@@ -16,31 +19,6 @@ int can_Move_Rook(int currentRow, int currentCol, int targetRow, int targetCol) 
 
 
 }
-
-int isPathClear_Rook(int currentRow, int currentCol, int targetRow, int targetCol) {
-	if (currentCol < targetCol) {
-		for (currentCol; currentCol < targetCol; currentCol++) {
-			if Empty (currentCol == 3, currentRow == 5) = {
-							return 1;
-			} //일단 여기부터  
-				
-               
-			else { return 0; }
-			
-		}
-
-	}
-	else if (currentCol > targetCol) {
-		for (currentCol; currentCol > targetCol; currentCol--) {
-		}
-	}
-	 
-
-
-}
-
-
-
 int can_Move_Knight(int currentRow, int currentCol, int targetRow, int targetCol) {
 	if (currentRow == targetRow && currentCol == targetCol) { return 0; }
 	else if (abs(currentRow - targetRow) == 2 && (abs(currentCol - targetCol) == 1)
@@ -96,42 +74,56 @@ int can_Move_King(int currentRow, int currentCol, int targetRow, int targetCol) 
 
 }
 
-int can_Move_Pawn(int currentRow, int currentCol, int targetRow, int targetCol, int White_piece) {
-	if (currentRow == targetRow && currentCol == targetCol) { return 0; }
+int can_Move_Pawn(int currentRow, int currentCol, int targetRow, int targetCol, int white_piece) {
+	if (white_piece == 1 && targetRow == currentRow - 1 && targetCol == currentCol) { return 1; }
+	else if (white_piece == 0 && targetRow == currentRow + 1 && targetCol == currentCol) { return 1; }
 
-	else if ((currentRow == 2 //2는 임의로 정한 "시작 위치"
-			 && 
-			 currentCol == targetCol
-			 &&
-		abs(targetRow - currentRow) == 2 )) {return 1; } //시작 위치에 있다 = 첫턴이면 2칸 이동 로직
+	else if (white_piece == 1 && currentRow == 6 && targetRow == currentRow - 2) {return 1;}
+		
+	else if (white_piece == 0 && currentRow == 1 && targetRow == currentRow + 2) { return 1; }
+		
+	else { return 0;  }
+			
 	
-	else if (currentRow > 2 
-			&&
-			currentCol == targetCol
-			&&
-		abs(targetRow - currentRow) == 1 ) {return 1; }
-
-	else { return 0; }
-
-
-
-}
-
-int canMovePawn(int currentRow, int currentCol, int targetRow, int targetCol, int Black_piece) {
-	if (currentRow == targetRow && currentCol == targetCol) { return 0; }
-
-	else if ((currentRow == 7 //2는 임의로 정한 "시작 위치"
-		&&
-		currentCol == targetCol
-		&&
-		abs(targetRow - currentRow) == 7)) {
-		return 1;
-	}
-
 
 
 
 
 }
+
+
+
+int main() {
+	printf("Rook   (3,2) -> (3,7): %d\n", can_Move_Rook(3, 2, 3, 7));
+	printf("Rook   (3,2) -> (7,2): %d\n", can_Move_Rook(3, 2, 7, 2));
+	printf("Rook   (3,2) -> (7,5): %d\n", can_Move_Rook(3, 2, 7, 5));
+	printf("Rook   (3,2) -> (3,2): %d\n", can_Move_Rook(3, 2, 3, 2));
+
+	printf("Knight (3,2) -> (5,3): %d\n", can_Move_Knight(3, 2, 5, 3));
+	printf("Knight (3,2) -> (4,4): %d\n", can_Move_Knight(3, 2, 4, 4));
+	printf("Knight (3,2) -> (5,4): %d\n", can_Move_Knight(3, 2, 5, 4));
+	printf("Knight (3,2) -> (3,2): %d\n", can_Move_Knight(3, 2, 3, 2));
+
+	printf("Bishop (3,2) -> (4,3): %d\n", can_Move_Bishop(3, 2, 4, 3));
+	printf("Bishop (3,2) -> (5,4): %d\n", can_Move_Bishop(3, 2, 5, 4));
+	printf("Bishop (3,2) -> (4,4): %d\n", can_Move_Bishop(3, 2, 4, 4));
+	printf("Bishop (3,2) -> (3,2): %d\n", can_Move_Bishop(3, 2, 3, 2));
+
+	printf("Queen  (3,2) -> (3,7): %d\n", can_Move_Queen(3, 2, 3, 7));
+	printf("Queen  (3,2) -> (7,2): %d\n", can_Move_Queen(3, 2, 7, 2));
+	printf("Queen  (3,2) -> (5,4): %d\n", can_Move_Queen(3, 2, 5, 4));
+	printf("Queen  (3,2) -> (5,5): %d\n", can_Move_Queen(3, 2, 5, 5));
+
+	printf("King   (3,2) -> (3,3): %d\n", can_Move_King(3, 2, 3, 3));
+	printf("King   (3,2) -> (4,3): %d\n", can_Move_King(3, 2, 4, 3));
+	printf("King   (3,2) -> (5,2): %d\n", can_Move_King(3, 2, 5, 2));
+	printf("King   (3,2) -> (3,2): %d\n", can_Move_King(3, 2, 3, 2));
+
+
+return 0;
+}
+
+
+
 
 
