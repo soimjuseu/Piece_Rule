@@ -81,8 +81,36 @@ int Is_path_Clear(int currentRow, int currentCol, int targetRow, int targetCol) 
 
 		
 	}
-	return 0;
-  
+	if (abs(targetCol - currentCol) == (abs(targetRow - currentRow)))
+	{
+			for (; currentCol != targetCol && currentRow != targetRow;) {
+				if (currentCol < targetCol && currentRow < targetRow) {
+						currentCol++, currentRow++;
+				}
+						
+				else if (currentCol > targetCol && currentRow > targetRow) {
+					currentCol--, currentRow--;
+				}
+
+				else if (currentCol > targetCol && currentRow < targetRow) {
+					currentCol--, currentRow++;
+				}
+
+				else if (currentCol < targetCol && currentRow > targetRow) {
+					currentCol++, currentRow--;
+				}
+				if (currentCol == targetCol && currentRow == targetRow) { return 1; }
+
+				else {
+						if (board[currentRow][currentCol] != '.') { return 0; }
+				}
+						
+					
+				}
+			
+			return 1;
+		}
+
 }
 int can_Move_Knight(int currentRow, int currentCol, int targetRow, int targetCol) {
 	if (currentRow == targetRow && currentCol == targetCol) { return 0; }
