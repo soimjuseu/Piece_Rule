@@ -249,6 +249,15 @@ int main() {
 	printf("Pawn W  (5,3) -> (3,3): %d\n",
 		can_Move_Pawn(5, 3, 3, 3, 1, 1, 0));
 
+	printf("Clear horizontal: %d\n", Is_path_Clear(3, 2, 3, 5));
+	printf("Blocked horizontal: %d\n", Is_path_Clear(6, 0, 6, 3));
+
+	printf("Clear vertical: %d\n", Is_path_Clear(3, 2, 5, 2));
+	printf("Blocked vertical: %d\n", Is_path_Clear(0, 0, 3, 0));
+
+	printf("Target occupied only: %d\n", Is_path_Clear(3, 0, 6, 0));
+	printf("Same position: %d\n", Is_path_Clear(3, 2, 3, 2));
+
 
 	return 0;
 }
