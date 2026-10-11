@@ -2,7 +2,18 @@
 #include <stdlib.h>
 #include "Rule_header.h"
 
+char board[BOARD_SIZE][BOARD_SIZE] = {
+{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+{'.', '.', '.', '.', '.', '.', '.', '.'},
+{'.', '.', '.', '.', '.', '.', '.', '.'},
+{'.', '.', '.', '.', '.', '.', '.', '.'},
+{'.', '.', '.', '.', '.', '.', '.', '.'},
+{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+};
 
+//임시로 작성 중이시던 코드 좀 베껴옴(원할한 테스트를 위해) 
 
 
 int can_Move_Rook(int currentRow, int currentCol, int targetRow, int targetCol) //
@@ -22,22 +33,56 @@ int can_Move_Rook(int currentRow, int currentCol, int targetRow, int targetCol) 
 
 }
 
-int Is_path_Clear(int currentRow, int currentCol, int targetRow, int targetCol,char piece) { 
+int Is_path_Clear(int currentRow, int currentCol, int targetRow, int targetCol) {
 	//일단 piece는 나중에 실제 기물이랑 연결하려고 임의로 만들어봄
 	//경우에 따라 바꿔도 됨
+
+			//세로
+	if (currentCol == targetCol && currentRow == targetRow) {return 0;}
 	if (currentCol < targetCol && currentRow == targetRow || (currentCol > targetCol && currentRow == targetRow)) {
-		for (currentCol; currentCol < targetCol; currentCol++)  {
-			for (currentCol; currentCol > targetCol; currentCol--) {
+
+		for (currentCol; currentCol != targetCol;) {
+			if (currentCol < targetCol) {
+				currentCol++;
+			}
+			else if (currentCol > targetCol) {
+				currentCol--;
+			}
+
+			if (currentCol == targetCol) { return 1; }
+
+			else {
+				if (board[currentRow][currentCol] != '.') { return 0; }
+			}
+
+
+
 			
+		}
+			return 1;
+	}	//가로
+	
+	if (currentRow < targetRow && currentCol == targetCol || (currentRow > targetRow && currentCol == targetCol)) {
+		for (currentRow; currentRow != targetRow;) {
+			if (currentRow < targetRow) {
+				currentRow++;
+			}
+			else if (currentRow > targetRow) {
+				currentRow--;
+			}
+
+			if (currentRow == targetRow) { return 1; }
+
+			else {
+				if (board[currentRow][currentCol] != '.') { return 0; }
 			}
 
 		}
-	}
 
-	else if (currentRow < targetRow && currentCol == targetCol) {
-	
+		
 	}
-
+	return 0;
+  
 }
 int can_Move_Knight(int currentRow, int currentCol, int targetRow, int targetCol) {
 	if (currentRow == targetRow && currentCol == targetCol) { return 0; }
@@ -127,13 +172,14 @@ int can_Move_Pawn(int currentRow, int currentCol, int targetRow, int targetCol, 
 
 
 
-	else { return 0; }
+		else { return 0; }
 
 }
 
 
 
 int main() {
+
 	printf("Rook   (3,2) -> (3,7): %d\n", can_Move_Rook(3, 2, 3, 7));
 	printf("Rook   (3,2) -> (7,2): %d\n", can_Move_Rook(3, 2, 7, 2));
 	printf("Rook   (3,2) -> (7,5): %d\n", can_Move_Rook(3, 2, 7, 5));

@@ -1,1 +1,1 @@
-﻿
+﻿#define BOARD_SIZE 8
