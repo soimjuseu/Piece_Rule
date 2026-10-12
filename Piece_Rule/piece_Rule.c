@@ -16,6 +16,11 @@ char board[BOARD_SIZE][BOARD_SIZE] = {
 //임시로 작성 중이시던 코드 좀 베껴옴(원할한 테스트를 위해) 
 
 
+int Can_move_piece(int currentRow, int currentCol, int targetRow, int targetCol) {
+
+}
+
+
 int can_Move_Rook(int currentRow, int currentCol, int targetRow, int targetCol) //
 {
 
@@ -25,7 +30,7 @@ int can_Move_Rook(int currentRow, int currentCol, int targetRow, int targetCol) 
 
 
 	{
-		return 1;
+		return Is_path_Clear(currentRow, currentCol, targetRow, targetCol);
 	}
 	else { return 0; }
 	//룩은 거리제한은 없지만 방향제한(열,행)은 있음 따라서 행=행 혹은 열=열이 만족될 때 이동 허가 로직
@@ -34,8 +39,7 @@ int can_Move_Rook(int currentRow, int currentCol, int targetRow, int targetCol) 
 }
 
 int Is_path_Clear(int currentRow, int currentCol, int targetRow, int targetCol) {
-	//일단 piece는 나중에 실제 기물이랑 연결하려고 임의로 만들어봄
-	//경우에 따라 바꿔도 됨
+	
 
 			//세로
 	if (currentCol == targetCol && currentRow == targetRow) {return 0;}
@@ -60,8 +64,8 @@ int Is_path_Clear(int currentRow, int currentCol, int targetRow, int targetCol) 
 			
 		}
 			return 1;
-	}	//가로
-	
+	}	
+	   //가로
 	if (currentRow < targetRow && currentCol == targetCol || (currentRow > targetRow && currentCol == targetCol)) {
 		for (currentRow; currentRow != targetRow;) {
 			if (currentRow < targetRow) {
@@ -81,6 +85,7 @@ int Is_path_Clear(int currentRow, int currentCol, int targetRow, int targetCol) 
 
 		
 	}
+	//대각선
 	if (abs(targetCol - currentCol) == (abs(targetRow - currentRow)))
 	{
 			for (; currentCol != targetCol && currentRow != targetRow;) {
@@ -128,7 +133,7 @@ int can_Move_Knight(int currentRow, int currentCol, int targetRow, int targetCol
 
 int can_Move_Bishop(int currentRow, int currentCol, int targetRow, int targetCol) {
 	if (currentRow == targetRow && currentCol == targetCol) { return 0; }
-	else if (abs(targetRow - currentRow) == (abs(targetCol - currentCol))) { return 1; }
+	else if (abs(targetRow - currentRow) == (abs(targetCol - currentCol))) { return Is_path_Clear(currentRow, currentCol, targetRow, targetCol); }
 	else { return 0; }
 
 	//비숍은 4방향으로 "대각선"만 충족된다면 거리제한 없이 이동이 가능함. 여기서 "대각선" 이기에 target에서 current를 뺀 값이 col/row 모두 동일하다면 대각선 판정이 나옴
@@ -146,7 +151,7 @@ int can_Move_Queen(int currentRow, int currentCol, int targetRow, int targetCol)
 		||
 		abs(targetRow - currentRow) == abs(targetCol - currentCol) //2.대각선
 		)) {
-		return 1;
+		return Is_path_Clear(currentRow, currentCol, targetRow, targetCol);
 	}
 
 	else { return 0; }
@@ -277,14 +282,26 @@ int main() {
 	printf("Pawn W  (5,3) -> (3,3): %d\n",
 		can_Move_Pawn(5, 3, 3, 3, 1, 1, 0));
 
-	printf("Clear horizontal: %d\n", Is_path_Clear(3, 2, 3, 5));
-	printf("Blocked horizontal: %d\n", Is_path_Clear(6, 0, 6, 3));
+	printf("1. 가로 이동: %d\n",
+		Is_path_Clear(3, 1, 3, 4));
 
-	printf("Clear vertical: %d\n", Is_path_Clear(3, 2, 5, 2));
-	printf("Blocked vertical: %d\n", Is_path_Clear(0, 0, 3, 0));
+	printf("2. 세로 이동: %d\n",
+		Is_path_Clear(2, 3, 5, 3));
 
-	printf("Target occupied only: %d\n", Is_path_Clear(3, 0, 6, 0));
-	printf("Same position: %d\n", Is_path_Clear(3, 2, 3, 2));
+	printf("3. 대각선 오른쪽 아래: %d\n",
+		Is_path_Clear(2, 2, 5, 5));
+
+	printf("4. 대각선 오른쪽 위: %d\n",
+		Is_path_Clear(5, 2, 2, 5));
+
+	printf("5. 대각선 왼쪽 아래: %d\n",
+		Is_path_Clear(2, 5, 5, 2));
+
+	printf("6. 대각선 왼쪽 위: %d\n",
+		Is_path_Clear(5, 5, 2, 2));
+
+	printf("7. 같은 칸 이동: %d\n",
+		Is_path_Clear(3, 3, 3, 3));
 
 
 	return 0;
