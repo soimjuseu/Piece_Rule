@@ -16,10 +16,6 @@ char board[BOARD_SIZE][BOARD_SIZE] = {
 //임시로 작성 중이시던 코드 좀 베껴옴(원할한 테스트를 위해) 
 
 
-int Can_move_piece(int currentRow, int currentCol, int targetRow, int targetCol) {
-
-}
-
 
 int can_Move_Rook(int currentRow, int currentCol, int targetRow, int targetCol) //
 {
@@ -210,7 +206,7 @@ int can_Move_Pawn(int currentRow, int currentCol, int targetRow, int targetCol, 
 }
 
 
-
+ //여기부터 테스트용 출력 코드입니다.
 int main() {
 
 	printf("Rook   (3,2) -> (3,7): %d\n", can_Move_Rook(3, 2, 3, 7));
