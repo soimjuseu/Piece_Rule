@@ -16,6 +16,33 @@ char board[BOARD_SIZE][BOARD_SIZE] = {
 //임시로 작성 중이시던 코드 좀 베껴옴(원할한 테스트를 위해) 
 
 
+int can_move_piece(int currentRow, int currentCol, int targetRow, int targetCol) {
+	if (Rook) {
+		return can_Move_Rook(currentRow, currentCol, targetRow, targetCol);
+		}
+
+	if (Pawn) {
+		return can_Move_Pawn(currentRow, currentCol, targetRow, targetCol);
+	}
+
+	if (Bishop) {
+		return can_Move_Bishop(currentRow, currentCol, targetRow, targetCol);
+	}
+	
+	if (Knight) {
+		return can_Move_Knight(currentRow, currentCol, targetRow, targetCol);
+	}
+
+	if (Queen) {
+		return can_Move_Queen(currentRow, currentCol, targetRow, targetCol);
+	}
+
+	if (King) {
+		return can_Move_King(currentRow, currentCol, targetRow, targetCol);
+	}
+}
+
+
 
 int can_Move_Rook(int currentRow, int currentCol, int targetRow, int targetCol) //
 {
