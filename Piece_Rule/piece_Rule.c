@@ -1,6 +1,46 @@
 ﻿#include <stdio.h>
 #include <stdlib.h>
 #include "Rule_header.h"
+#include <SDL2/SDL.h>
+#include <ctype.h>
+
+
+//모든 코드를 합한 최종 이동 판별 코드
+int move_piece(int currentCol, int currentRow, int targetCol, int targetRow) {
+
+	if ((currentRow < 0 || currentRow >= 8) ||
+		currentCol < 0 || currentCol >= 8 ||
+		targetRow < 0 || targetRow >= 8 ||
+		targetCol < 0 || targetCol >= 8) {return 0;}
+	//좌표가 8x8을 벗어나는지 검사 
+
+
+char start_location = board[currentRow][currentCol];
+char target_location = board[targetRow][targetCol];
+if (start_location == '.') { return 0; }
+//좌표 검사에서 문제가 없다면 현재좌표/도착지좌표를 각각 start/target에 저장 후, 만약 '.' 
+// 즉, 빈칸이라면 0 반환
+
+
+
+	
+	
+
+	if (can_move_piece(currentRow, currentCol, targetRow, targetCol))
+	{
+		board[currentRow][currentCol] = '.';
+		board[targetRow][targetCol] = start_location;
+	}
+	
+	if (target_location != '.') {
+		if (isupper(start_location) == isupper(target_location)) {return 0;}
+			
+
+	}	
+}
+
+
+
 
 char board[BOARD_SIZE][BOARD_SIZE] = {
 {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
@@ -13,7 +53,7 @@ char board[BOARD_SIZE][BOARD_SIZE] = {
 {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
 };
 
-//임시로 작성 중이시던 코드 좀 베껴옴(원할한 테스트를 위해) 
+//임시로 작성 중이시던 코드 좀 베껴옴(원할한 테스트를 위해)
 
 
 int can_move_piece(int currentRow, int currentCol, int targetRow, int targetCol) {
@@ -40,8 +80,21 @@ int can_move_piece(int currentRow, int currentCol, int targetRow, int targetCol)
 	if (King) {
 		return can_Move_King(currentRow, currentCol, targetRow, targetCol);
 	}
+	return 0;
 }
 
+//폰의 타겟 칸이 프로모션을 실행하기 위한 칸에 도착하는지/했는지 판별하는 함수
+int Pawn_promotion(int currentRow, int currentCol, int targetRow, int targetCol) {
+	if ((board[currentCol][currentRow] == 'P' || 
+		board[currentCol][currentRow] == 'p')
+		&&
+		(targetRow == 7 || targetRow == 0)) {return 1;}
+	else { return 0; }
+}
+
+//폰의 실제 프로모션 구현 함수
+//void promote_Pawn(int targetCol, int targetRow, char Select_piece) {
+	//board[targetRow][targetCol] = Select_piece;
 
 
 int can_Move_Rook(int currentRow, int currentCol, int targetRow, int targetCol) //
