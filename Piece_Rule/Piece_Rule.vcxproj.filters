@@ -18,6 +18,9 @@
     <ClCompile Include="piece_Rule.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Chess_Graphic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rule_header.h">

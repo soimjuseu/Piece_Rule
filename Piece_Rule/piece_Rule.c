@@ -1,24 +1,17 @@
-﻿#include <stdio.h>
+﻿#define _CRT_SECURE_NO_WARNINGS
+#define SDL_MAIN_HANDLED
+#include <stdio.h>
 #include <stdlib.h>
 #include "Rule_header.h"
 #include <SDL2/SDL.h>
 #include <ctype.h>
+#include <SDL2/SDL_image.h>
+
 
 
 int promotion_mode = 0;
 int promotionCol = -1;
 int promotionRow = -1;
-
-char board[BOARD_SIZE][BOARD_SIZE] = {
-{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
-{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
-{'.', '.', '.', '.', '.', '.', '.', '.'},
-{'.', '.', '.', '.', '.', '.', '.', '.'},
-{'.', '.', '.', '.', '.', '.', '.', '.'},
-{'.', '.', '.', '.', '.', '.', '.', '.'},
-{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
-{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
-};
 
 
 int move_piece(int currentRow, int currentCol, int targetRow, int targetCol) {
@@ -44,8 +37,12 @@ int move_piece(int currentRow, int currentCol, int targetRow, int targetCol) {
 	if (target_location != '.') {
 		if (isupper(start_location) == isupper(target_location)) { return 0; }
 	}
-	// 3.이동하려는 목표 칸에 같은 편 기물이 있는 지 검사 (보드 판상 알파벳으로 되어있기에 두개의 기물을 
+    // 3.이동하려는 목표 칸에 같은 편 기물이 있는 지 검사 (보드 판상 알파벳으로 되어있기에 두개의 기물을 
 	// 모두 대문자로 올리고 P=P 이런식으로 같은 편인지 체크.)
+	if (target_location == 'K' || target_location == 'k') {
+		return 0;
+	}
+	// + 상대편 킹 잡기 방어
 
 	if (can_move_piece(currentRow, currentCol, targetRow, targetCol))
 	{
@@ -103,48 +100,6 @@ int Pawn_promotion(int targetRow, int targetCol) {
 	
 	else { return 0; }
 }
-
-
-
-
-
-//폰의 실제 승급 구현 함수(SDL - 마우스 구현 코드 필요)
-int promote_Pawn(int targetCol, int targetRow, char Select_piece)  {
-	//Select_piece는 SDL-마우스로 누른 값을 저장하는 변수
-	//여기쯤에 SDL을 넣어야 하는데
-	if (board[targetRow][targetCol] == 'P') {
-	   if   (Select_piece == 'Q' ||
-			Select_piece == 'R' ||
-			Select_piece == 'B' ||
-			Select_piece == 'N')
-		   //마우스로 누른값 확인(실제 게임상에선 선택 창 UI가 뜰꺼임)
-
-	   {
-		   board[targetRow][targetCol] = Select_piece; 
-		   promotion_mode = 0;
-		   return 1;
-	   }
-		else {return 0;}
-
-	}
-	else if (board[targetRow][targetCol] == 'p') {
-		if
-			   (Select_piece == 'q' ||
-				Select_piece == 'r' ||
-				Select_piece == 'b' ||
-				Select_piece == 'n') {
-			board[targetRow][targetCol] = Select_piece;
-			promotion_mode = 0;
-			return 1;
-		}
-		else { return 0; }
-			
-	}	
-	return 0;
-
-	board[targetRow][targetCol] = Select_piece;
-}	
-
 
 int can_Move_Rook(int currentRow, int currentCol, int targetRow, int targetCol) //
 {
@@ -303,7 +258,8 @@ int can_Move_King(int currentRow, int currentCol, int targetRow, int targetCol) 
 
 }
 
-int can_Move_Pawn(int currentRow, int currentCol, int targetRow, int targetCol) { //white부터 3개의 함수는 테스트용 임의의 함수
+int can_Move_Pawn(int currentRow, int currentCol, int targetRow, int targetCol) { 
+
 
 int direction = 0;
 
@@ -367,94 +323,4 @@ else if (board[currentRow][currentCol] == 'P' &&
 		else { return 0; }
 
 }
-int main() {
-	int running = 1;
-	SDL_Event e;
-	while (running) {
-		//여기부분 부터가 따로 폰승급용 UI 창 + 마우스
-		SDL_Window* promotionWindow = SDL_CreateWindow(
-			"폰 승격",
-			SDL_WINDOWPOS_CENTERED,
-			SDL_WINDOWPOS_CENTERED,
-			300,
-			180,
-			SDL_WINDOW_HIDDEN
-		);
-		if (promotion_mode == 1) {
-			SDL_ShowWindow(promotionWindow);
-		}
-		else {
-			SDL_HideWindow(promotionWindow);
-		}
-		SDL_Renderer* promotionRenderer =
-			SDL_CreateRenderer(promotionWindow, -1, SDL_RENDERER_ACCELERATED);
-		SDL_SetRenderDrawColor(promotionRenderer, 240, 240, 240, 255);
-		SDL_RenderClear(promotionRenderer);
-		SDL_RenderPresent(promotionRenderer);
-		int optionwidth = 300 / 4;
-		(e.button.windowID == SDL_GetWindowID(promotionWindow));
 
-
-		while (SDL_PollEvent(&e)) {
-			if (e.type == SDL_QUIT) {
-				running = 0;
-			}
-			else if (e.type == SDL_MOUSEBUTTONDOWN) {
-				if (e.button.button == SDL_BUTTON_LEFT) {
-					//여기 아래 부분 코드부터만 따로 합치면 됨(위에는 이미 겹치는 코드단이라)
-					if (e.button.windowID == SDL_GetWindowID(promotionWindow)) {
-						int mouseX = e.button.x;
-						int mouseY = e.button.y;
-
-						int selectedOption = mouseX / optionwidth;
-						char Select_piece;
-
-						if (isupper(board[promotionRow][promotionCol])) {
-							switch (selectedOption) {
-							case 0:
-								Select_piece = 'Q';
-								break;
-							case 1:
-								Select_piece = 'R';
-								break;
-							case 2:
-								Select_piece = 'B';
-								break;
-							case 3:
-								Select_piece = 'N';
-								break;
-							default:
-								return 0;
-							}
-						}
-						else {
-							switch (selectedOption) {
-							case 0:
-								Select_piece = 'q';
-								break;
-							case 1:
-								Select_piece = 'r';
-								break;
-							case 2:
-								Select_piece = 'b';
-								break;
-							case 3:
-								Select_piece = 'n';
-								break;
-							default:
-								return 0;
-							}
-							
-							}
-								if (promote_Pawn(promotionCol, promotionRow, Select_piece)) {
-								SDL_HideWindow(promotionWindow);
-						}
-					}
-
-				}
-			}
-
-		}
-
-
-	}
