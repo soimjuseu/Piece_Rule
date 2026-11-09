@@ -29,7 +29,7 @@ int can_Move_King(int currentRow, int currentCol, int targetRow, int targetCol);
 
 int Is_path_Clear(int currentRow, int currentCol, int targetRow, int targetCol);
 
-
+int is_square_attacked(int targetRow, int targetCol);
 
 
 

@@ -13,7 +13,36 @@ int promotion_mode = 0;
 int promotionCol = -1;
 int promotionRow = -1;
 
+//킹의 "체크" 상태를 검사하기 위한 첫번째 단계
+int is_square_attacked(int targetRow, int targetCol) {
+	if (targetRow < 0 || targetRow >= BOARD_SIZE
+		&& targetCol < 0 || targetCol >= BOARD_SIZE) {return 0;}
+		// 1.보드판을 넘어가지 않는지 검사
+	for (int row = 0; row < BOARD_SIZE; row++) {
+		for (int col = 0; col < BOARD_SIZE; col++) {
+			if (board[row][col] != '.') {
+				if (isupper(board[targetRow][targetCol]) != isupper(board[row][col])) {
+					if (board[row][col] == 'R' || board[row][col] == 'r') {
+						return can_Move_Rook(row, col, targetRow, targetCol); {
+							return 1;
+						}
+					
+					}
+							else { return 0; }
+				}
+			}
+		}
+	}
 
+		
+	
+
+
+
+
+
+	return 0;
+}
 int move_piece(int currentRow, int currentCol, int targetRow, int targetCol) {
 
 	if (promotion_mode == 1) {
