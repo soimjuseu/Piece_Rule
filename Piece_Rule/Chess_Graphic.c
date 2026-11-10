@@ -220,7 +220,6 @@ int main(int argc, char* argv[]) {
         printf("SDL 초기화 실패: %s\n", SDL_GetError());
         return 1;
     }
-
     if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
         printf("SDL_image 초기화 실패: %s\n", IMG_GetError());
     }

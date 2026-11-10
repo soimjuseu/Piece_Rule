@@ -13,6 +13,65 @@ int promotion_mode = 0;
 int promotionCol = -1;
 int promotionRow = -1;
 
+//최종장 3개의 체크 상태를 점검해 체크메이트 확인
+int is_checkmate(int isWhite) {
+	//1.체크상태를 확인하는 함수를 불러와 체크라면 다음 검사로 넘기고 아니라면 여기서 종료
+	if (is_in_check(isWhite) == 0) {
+		return 0;
+	}
+	for (int row = 0; row < BOARD_SIZE; row++) {
+		for (int col = 0; col < BOARD_SIZE; col++) {
+			if (board[row][col] != '.' && isupper(board[row][col]) == isWhite) {
+				for (int targetRow = 0; targetRow < BOARD_SIZE; targetRow++) {
+					for (int targetCol = 0; targetCol < BOARD_SIZE; targetCol++) {
+						if (can_move_piece(row, col, targetRow, targetCol) == 1) {
+							
+							char start_location; 
+							char target_location;
+
+							start_location = board[row][col];
+							target_location = board[targetRow][targetCol];
+
+							//아군 기물이 있는 칸은 건너뛰기
+							if (target_location != '.') {
+							if (isupper(start_location) == isupper(target_location)) { 
+										continue; 
+									}
+							if (target_location == 'K' || target_location == 'k') {
+										continue;
+							}
+					    }
+
+							//임시 좌표 이동
+							board[row][col] = '.';
+							board[targetRow][targetCol] = start_location;
+
+							//이동 후에도 체크 상태라면 원래 위치로 원상복구
+							int check_result = is_in_check(isWhite);
+							if (check_result == 1) {
+								board[row][col] = start_location;
+								board[targetRow][targetCol] = target_location;
+							}
+
+							//체크를 피할 수 있는 이동이라면 체크메이트 아님
+							if (check_result == 0) {
+								board[row][col] = start_location;
+								board[targetRow][targetCol] = target_location;
+								return 0;
+							}
+
+						}
+					}
+				}
+			}
+		}
+	}
+		return 1;
+}
+
+
+
+
 //킹의 "체크" 상태를 검사하기 위한 첫번째 단계
 //각 기물의 다음 이동 경로가 킹 위치랑 겹친다면 1을 반환함
 int is_square_attacked(int targetRow, int targetCol, int targetisWhite) {
@@ -99,8 +158,19 @@ int find_King(int isWhite, int* kingRow, int* kingCol) {
 	}
 	return 0;
 }
-
-int is_in_check()
+		// 해당 색상의 킹이 상대 기물에게 공격받고 있는지 확인
+		// 체크 상태이면 1, 아니면 0 반환
+int is_in_check(int isWhite) {
+	int KingRow;
+	int KingCol;
+	find_King(isWhite, &KingRow, &KingCol);
+	if (find_King(isWhite, &KingRow, &KingCol) == 0) {
+		return 0;
+	}
+	
+	return is_square_attacked(KingRow, KingCol, isWhite); 
+		
+}
 
 
 int move_piece(int currentRow, int currentCol, int targetRow, int targetCol) {
@@ -137,6 +207,17 @@ int move_piece(int currentRow, int currentCol, int targetRow, int targetCol) {
 	{
 		board[currentRow][currentCol] = '.';
 		board[targetRow][targetCol] = start_location;
+
+		//기물에게 공격 받는지 확인하고 만약 "공격 받았다"라고 판별되면 취소 작업(옮기려던 기물을 이전 위치로) 진행
+		if (is_in_check(isupper(start_location))!= 0) {
+			board[currentRow][currentCol] = start_location;
+		    board[targetRow][targetCol] = target_location;
+
+
+		   return 0;
+		}
+
+
 		if (Pawn_promotion(targetRow, targetCol)) {
 			promotionCol = targetCol;
 			promotionRow = targetRow;
