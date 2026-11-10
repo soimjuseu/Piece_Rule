@@ -14,35 +14,95 @@ int promotionCol = -1;
 int promotionRow = -1;
 
 //킹의 "체크" 상태를 검사하기 위한 첫번째 단계
-int is_square_attacked(int targetRow, int targetCol) {
-	if (targetRow < 0 || targetRow >= BOARD_SIZE
-		&& targetCol < 0 || targetCol >= BOARD_SIZE) {return 0;}
+//각 기물의 다음 이동 경로가 킹 위치랑 겹친다면 1을 반환함
+int is_square_attacked(int targetRow, int targetCol, int targetisWhite) {
+	if ((targetRow < 0 || targetRow >= BOARD_SIZE)
+	|| (targetCol  < 0 || targetCol >= BOARD_SIZE)) { return 0; }
 		// 1.보드판을 넘어가지 않는지 검사
 	for (int row = 0; row < BOARD_SIZE; row++) {
 		for (int col = 0; col < BOARD_SIZE; col++) {
-			if (board[row][col] != '.') {
-				if (isupper(board[targetRow][targetCol]) != isupper(board[row][col])) {
-					if (board[row][col] == 'R' || board[row][col] == 'r') {
-						return can_Move_Rook(row, col, targetRow, targetCol); {
+			if (board[row][col] == '.') {
+				continue;
+			}
+
+			if (board[row][col] == 'P' || board[row][col] == 'p') {
+			
+				if (board[row][col] == 'P') {
+					if (isupper(board[row][col]) != targetisWhite
+						&& (targetRow == row - 1 && (targetCol == col - 1 || targetCol == col + 1))) {
+						return 1;
+					}
+				}
+				else {
+				
+					if (isupper(board[row][col]) != targetisWhite
+						&& (targetRow == row + 1 && (targetCol == col - 1 || targetCol == col + 1))) {
+						return 1;
+							}
+						}
+				   }
+			else {
+				if (isupper(board[row][col]) != targetisWhite) {
+					switch (toupper(board[row][col])) {
+					case 'R':
+						if (can_Move_Rook(row, col, targetRow, targetCol) == 1) {
+								return 1;
+						}
+						break;
+							
+					case 'B':
+						if (can_Move_Bishop(row, col, targetRow, targetCol) == 1) {
 							return 1;
 						}
-					
+						break;
+
+					case 'Q':
+						if (can_Move_Queen(row, col, targetRow, targetCol) == 1) {
+							return 1;
+						}
+						break;
+					case 'N':
+						if (can_Move_Knight(row, col, targetRow, targetCol) == 1) {
+							return 1;
+						}
+						break;
+					case 'K':
+						if (can_Move_King(row, col, targetRow, targetCol) == 1) {
+							return 1;
+						}
+						break;
 					}
-							else { return 0; }
 				}
+					
 			}
 		}
 	}
-
-		
-	
-
-
-
-
-
 	return 0;
 }
+
+//체크 2단계 킹의 위치 찾기
+//위치 찾아서 포인터에 저장
+
+int find_King(int isWhite, int* kingRow, int* kingCol) {
+	for (int row = 0; row < BOARD_SIZE; row++) {
+		for (int col = 0; col < BOARD_SIZE; col++) {
+			if (board[row][col] == 'K' || board[row][col] == 'k') {
+				if (isupper(board[row][col]) == isWhite) {
+					*kingRow = row;
+					*kingCol = col;
+					return 1;
+				}
+					
+			}
+			
+		}
+	}
+	return 0;
+}
+
+int is_in_check()
+
+
 int move_piece(int currentRow, int currentCol, int targetRow, int targetCol) {
 
 	if (promotion_mode == 1) {

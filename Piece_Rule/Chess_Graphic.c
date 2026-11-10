@@ -380,10 +380,10 @@ int main(int argc, char* argv[]) {
                                     char target_piece = board[by][bx];
 
                                     if (move_piece(selY, selX, by, bx)) {
-                                    if (target_piece != '.') {
-                                        if (target_piece >= 'A' && target_piece <= 'Z') {
-                                            if (white_captured_count < 32) {
-                                                captured_white_pieces[white_captured_count++] = target_piece;
+                                        if (target_piece != '.') {
+                                            if (target_piece >= 'A' && target_piece <= 'Z') {
+                                                if (white_captured_count < 32) {
+                                                    captured_white_pieces[white_captured_count++] = target_piece;
                                             }
                                         }
                                         else {
